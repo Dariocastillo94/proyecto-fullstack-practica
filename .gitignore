@@ -22,3 +22,11 @@ yarn-error.log*
 # --- SISTEMA ---
 .DS_Store
 Thumbs.db
+
+# --- IDEs (Eclipse, STS, IntelliJ) ---
+.metadata/
+.settings/
+.project
+.classpath
+.idea/
+*.iml
