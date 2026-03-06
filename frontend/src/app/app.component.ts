@@ -7,16 +7,23 @@ import { TaskService } from './services/task.service';
   standalone: true,
   imports: [FormsModule], // 2. Añadir esto
   template: `
-    <h1>Mis Tareas</h1>
+  <h1>Mis Tareas</h1>
+  <input [(ngModel)]="newTaskTitle" placeholder="Escribe una tarea...">
+  <button (click)="addTask()">Añadir</button>
 
-    <input [(ngModel)]="newTaskTitle" placeholder="Escribe una tarea...">
-    <button (click)="addTask()">Añadir</button>
-
-    <ul>
-      @for (task of tasks; track task.id) {
-        <li>{{ task.title }}</li>
-      }
-    </ul>
+  <ul>
+    @for (task of tasks; track task.id) {
+      <li>
+        <span [style.text-decoration]="task.completed ? 'line-through' : 'none'">
+          {{ task.title }}
+        </span>
+        <button (click)="toggleTask(task)">
+          {{ task.completed ? 'Desmarcar' : 'Completar' }}
+        </button>
+        <button (click)="deleteTask(task.id)" style="color: red;">Borrar</button>
+      </li>
+    }
+  </ul>
   `
 })
 export class AppComponent implements OnInit {
@@ -38,5 +45,14 @@ export class AppComponent implements OnInit {
       this.newTaskTitle = ''; // Limpiar campo
       this.loadTasks();       // Recargar lista
     });
+  }
+
+  toggleTask(task: any) {
+  task.completed = !task.completed; // Cambiamos el estado (true <-> false)
+  this.taskService.updateTask(task).subscribe(() => this.loadTasks());
+  }
+
+  deleteTask(id: number) {
+  this.taskService.deleteTask(id).subscribe(() => this.loadTasks());
   }
 }
